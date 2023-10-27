@@ -14,11 +14,13 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 
+
 @NgModule({
   declarations: [
     AppComponent,
     MenuComponent,
     DashboardComponent
+    
   ],
   imports: [
     BrowserModule,

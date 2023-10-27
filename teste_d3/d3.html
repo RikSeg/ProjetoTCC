@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualização de Médias de Notas</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+</head>
+<body>
+    <h1>Visualização de Médias de Notas por Matéria</h1>
+    <div id="chart"></div>
+
+    <script>
+        // Dados de exemplo: médias de notas por matéria
+        const data = [
+            { materia: 'Matemática', media: 8.5 },
+            { materia: 'História', media: 7.2 },
+            { materia: 'Ciências', media: 9.0 },
+            { materia: 'Língua Portuguesa', media: 8.8 },
+            { materia: 'Geografia', media: 7.5 }
+        ];
+
+        // Configurações do gráfico
+        const width = 600;
+        const height = 400;
+        const margin = { top: 35, right: 30, bottom: 40, left: 50 };
+
+        // Escalas
+        const xScale = d3.scaleBand()
+            .domain(data.map(d => d.materia))
+            .range([margin.left, width - margin.right])
+            .padding(0.1);
+
+        const yScale = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d.media)])
+            .nice()
+            .range([height - margin.bottom, margin.top]);
+
+        // Criação do SVG
+        const svg = d3.select('#chart')
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height);
+
+        // Criação das barras do gráfico
+        svg.selectAll('rect')
+            .data(data)
+            .enter()
+            .append('rect')
+            .attr('x', d => xScale(d.materia))
+            .attr('y', d => yScale(d.media))
+            .attr('width', xScale.bandwidth())
+            .attr('height', d => yScale(0) - yScale(d.media))
+            .attr('fill', 'steelblue');
+
+        // Eixos
+        const xAxis = d3.axisBottom(xScale);
+        const yAxis = d3.axisLeft(yScale);
+
+        svg.append('g')
+            .attr('class', 'x-axis')
+            .attr('transform', `translate(0, ${height - margin.bottom})`)
+            .call(xAxis);
+
+        svg.append('g')
+            .attr('class', 'y-axis')
+            .attr('transform', `translate(${margin.left}, 0)`)
+            .call(yAxis);
+
+        // Título do eixo Y
+        svg.append('text')
+            .attr('transform', 'rotate(-90)')
+            .attr('y', margin.left - 40)
+            .attr('x', 0 - (height / 2))
+            .attr('dy', '1em')
+            .style('text-anchor', 'middle')
+            .text('Média de Notas');
+
+        // Título do gráfico
+        svg.append('text')
+            .attr('x', width / 2)
+            .attr('y', margin.top - 10)
+            .attr('text-anchor', 'middle')
+            .style('font-size', '18px')
+            .text('Média de Notas por Matéria');
+    </script>
+</body>
+</html>
