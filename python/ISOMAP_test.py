@@ -15,7 +15,7 @@ X_iso = isomap.fit_transform(X)
 plt.figure(figsize=(10, 5))
 plt.subplot(1, 2, 1)
 plt.scatter(X[:, 0], X[:, 1], c=X[:, 2], cmap=plt.cm.Spectral)
-plt.title('Swiss Roll Original')
+plt.title('Original Data')
 
 plt.subplot(1, 2, 2)
 plt.scatter(X_iso[:, 0], X_iso[:, 1], c=X[:, 2], cmap=plt.cm.Spectral)
