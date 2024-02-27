@@ -1,7 +1,7 @@
 from sklearn.datasets import make_swiss_roll
 from sklearn.manifold import Isomap
 import matplotlib.pyplot as plt
-import csv
+
 
 
 
@@ -10,8 +10,8 @@ import csv
 
 #Leitura dos dados do csv
 def main():
-    matriz = ler_csv_para_matriz("Teste.csv")
-
+    # Gerar dados de exemplo (Swiss Roll dataset)
+    X, _ = make_swiss_roll(n_samples=1000, noise=0.2, random_state=42)
 
 # Criar uma instância do modelo ISOMAP
     isomap = Isomap(n_components=2, n_neighbors=10)
