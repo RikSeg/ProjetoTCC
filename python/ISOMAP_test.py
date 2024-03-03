@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 
 # Gerar dados de exemplo (Swiss Roll dataset)
-#X, _ = make_swiss_roll(n_samples=1000, noise=0.2, random_state=42)
+X, _ = make_swiss_roll(n_samples=1000, noise=0.2, random_state=42)
 
 #Leitura dos dados do csv
 def main():

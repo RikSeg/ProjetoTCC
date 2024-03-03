@@ -7,6 +7,8 @@ digits = load_digits()
 X = digits.data
 y = digits.target
 
+print(y)
+
 # Criar uma instância do modelo t-SNE
 tsne = TSNE(n_components=2, random_state=42)
 

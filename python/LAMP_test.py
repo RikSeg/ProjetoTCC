@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 digits = load_digits()
 
 # Criar uma instância do modelo UMAP com LAMP
-mapper = umap.UMAP(metric='lamp', n_components=2)
+mapper = umap.UMAP(metric='cosine', n_components=2)
 
 # Ajustar o modelo aos dados e transformá-los
 embedding = mapper.fit_transform(digits.data)
