@@ -40,7 +40,7 @@ def lsp(matriz):
 
 def plmp(matriz):
     num_landmarks = 5 #nro de clusters
-    
+
     # Seleção de Landmarks usando KMeans
     kmeans = KMeans(n_clusters=num_landmarks)
     kmeans.fit(matriz)
@@ -109,7 +109,7 @@ def processar_arquivo_entrada(nome_arquivo_entrada):
 
 def escrever_arquivo_saida(dados_entrada, nome_arquivo_saida):
     
-
+    nome_arquivo_saida = "./output/"+ nome_arquivo_saida
     # Escreve os dados no arquivo de saída
     with open(nome_arquivo_saida, 'w', newline='') as arquivo_csv:
         escritor_csv = csv.writer(arquivo_csv)
@@ -118,9 +118,9 @@ def escrever_arquivo_saida(dados_entrada, nome_arquivo_saida):
 
 def main():
     # Nome do arquivo de entrada e saída
-    nome_arquivo_entrada = "Teste.csv" #input("Digite o nome do arquivo CSV de entrada: ")
+    nome_arquivo_entrada = "./input/Teste.csv" #input("Digite o nome do arquivo CSV de entrada: ")
     
-    tecnica = int(input("Técnicas de teste:\n1: ISOMAP(Mapeamento Isométrico)\n2: LAMP\n3: LSP\n4: PLMP\n5: t-SNE\nDigite o número da tecnica: "))
+    tecnica = int(input("Técnicas de teste:\n1: ISOMAP - (Isometric Mapping)\n2: LAMP\t - (Linear Aggregation of Multiple Projections)\n3: LSP\t - (Least Squares Projections)\n4: PLMP\t - (Projected Landmark Multi-Projection) - OBS.:Usa KMeans\n5: t-SNE - (t-distributed Stochastic Neighbor Embedding)\nDigite o número da tecnica: "))
 
     if tecnica == 1:
         nome_arquivo_saida = "Saida_ISOMAP.txt"
