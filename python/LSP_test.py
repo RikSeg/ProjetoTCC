@@ -1,18 +1,29 @@
 import numpy as np
+from sklearn.decomposition import TruncatedSVD
+from sklearn.preprocessing import StandardScaler
 
-# Dados originais (matriz X)
-X = np.array([[1, 2, 3],
-              [4, 5, 6],
-              [7, 8, 9]])
+def LSP_projection(data, target_dimension):
+    # Normalizando os dados
+    scaler = StandardScaler()
+    data_normalized = scaler.fit_transform(data)
+    
+    # Aplicando a técnica de projeção LSP
+    svd = TruncatedSVD(n_components=target_dimension)
+    projected_data = svd.fit_transform(data_normalized)
+    
+    return projected_data
 
-# Variável alvo (vetor y)
-y = np.array([1, 2, 3])
-
-# Calcular os coeficientes da projeção de mínimos quadrados
-coefficients = np.linalg.lstsq(X, y, rcond=None)[0]
-
-# Projeto de mínimos quadrados dos dados originais
-projection = np.dot(X, coefficients)
-
-print("Coeficientes da projeção de mínimos quadrados:", coefficients)
-print("Projeção de mínimos quadrados:", projection)
+# Exemplo de uso
+if __name__ == "__main__":
+    # Definindo uma matriz de dados de exemplo (10 amostras, 5 atributos)
+    data = np.random.rand(10, 5)
+    
+    # Definindo a dimensionalidade alvo da projeção
+    target_dimension = 2
+    
+    # Realizando a projeção LSP
+    projected_data = LSP_projection(data, target_dimension)
+    
+    # Exibindo os dados projetados
+    print("Dados Projetados:")
+    print(projected_data)

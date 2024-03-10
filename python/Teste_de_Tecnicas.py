@@ -2,6 +2,10 @@ import csv
 import numpy as np
 from sklearn.manifold import TSNE
 from sklearn.manifold import Isomap
+from sklearn.decomposition import TruncatedSVD
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+from sklearn.cluster import KMeans
 import umap
 
 def default_case():
@@ -23,12 +27,45 @@ def lamp(matriz):
 
 
 def lsp(matriz):
-
-    return matriz
+    # Normalizando os dados
+    scaler = StandardScaler()
+    data_normalized = scaler.fit_transform(matriz)
+    
+    # Aplicando a técnica de projeção LSP
+    svd = TruncatedSVD(n_components=2)
+    matriz_saida = svd.fit_transform(data_normalized)
+    
+    return matriz_saida
 
 
 def plmp(matriz):
-
+    num_landmarks = 5 #nro de clusters
+    
+    # Seleção de Landmarks usando KMeans
+    kmeans = KMeans(n_clusters=num_landmarks)
+    kmeans.fit(matriz)
+    landmarks = kmeans.cluster_centers_
+    
+    # Projeção Múltipla usando PCA
+    pca_models = []
+    for landmark in landmarks:
+        # Selecionando amostras próximas ao landmark
+        distances = np.linalg.norm(matriz - landmark, axis=1)
+        nearest_samples_indices = np.argsort(distances)[:5]  # 5 amostras mais próximas
+        nearest_samples = matriz[nearest_samples_indices]
+        
+        # Aplicando PCA nas amostras próximas ao landmark
+        pca = PCA(n_components=2)
+        pca.fit(nearest_samples)
+        pca_models.append(pca)
+    
+    # Combinando as matrizes de projeção
+    combined_projection_matrix = np.vstack([pca.components_ for pca in pca_models])
+    
+    # Aplicando a projeção combinada nos dados originais
+    projected_data = np.dot(matriz, combined_projection_matrix.T)
+    
+    return projected_data
     return matriz
 
 
