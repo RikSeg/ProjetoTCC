@@ -118,20 +118,20 @@ def escrever_arquivo_saida(dados_entrada, nome_arquivo_saida):
 
 def main():
     # Nome do arquivo de entrada e saída
-    nome_arquivo_entrada = "./input/Teste.csv" #input("Digite o nome do arquivo CSV de entrada: ")
+    nome_arquivo_entrada = "./input/iris_index.csv" #input("Digite o nome do arquivo CSV de entrada: ")
     
     tecnica = int(input("Técnicas de teste:\n1: ISOMAP - (Isometric Mapping)\n2: LAMP\t - (Linear Aggregation of Multiple Projections)\n3: LSP\t - (Least Squares Projections)\n4: PLMP\t - (Projected Landmark Multi-Projection) - OBS.:Usa KMeans\n5: t-SNE - (t-distributed Stochastic Neighbor Embedding)\nDigite o número da tecnica: "))
 
     if tecnica == 1:
-        nome_arquivo_saida = "Saida_ISOMAP.txt"
+        nome_arquivo_saida = "Saida_ISOMAP.csv"
     elif tecnica == 2:
-        nome_arquivo_saida = "Saida_LAMP.txt"
+        nome_arquivo_saida = "Saida_LAMP.csv"
     elif tecnica == 3:
-        nome_arquivo_saida = "Saida_LSP.txt"
+        nome_arquivo_saida = "Saida_LSP.csv"
     elif tecnica == 4:
-        nome_arquivo_saida = "Saida_PLMP.txt"
+        nome_arquivo_saida = "Saida_PLMP.csv"
     elif tecnica == 5:
-        nome_arquivo_saida = "Saida_t-SNE.txt"
+        nome_arquivo_saida = "Saida_t-SNE.csv"
     else:
         print("ERRO: não foi selecionada uma técnica válida")
         exit(0)
