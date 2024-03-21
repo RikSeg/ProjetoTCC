@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scatter Plot with D3.js</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <div id="chart"></div>
+    <div id="details"></div>
+    <button onclick="toggleSelection()">Selecionar</button>
+
+    <script>
+        // Tamanho do gráfico
+        const width = 600;
+        const height = 400;
+        const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+
+        // Variáveis para seleção
+        let isSelecting = false;
+        let selectionStart = null;
+        let selectionEnd = null;
+
+        // Criar o SVG
+        const svg = d3.select("#chart")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        // Função de zoom
+        const zoom = d3.zoom()
+            .scaleExtent([1, 10])
+            .on("zoom", zoomed);
+
+        svg.call(zoom);
+
+        // Escala para os eixos x e y
+        const xScale = d3.scaleLinear().range([0, width]);
+        const yScale = d3.scaleLinear().range([height, 0]);
+
+        // Grupo para os pontos
+        const pointsGroup = svg.append("g");
+
+        // Carregar dados do CSV
+        d3.csv("../projecao_multidimensional/output/Saida_ISOMAP.csv").then(data => {
+            // Configurar domínios das escalas
+            const xScale = d3.scaleLinear()
+                      .domain(d3.extent(data, d => d[1])) // Posição da coluna x
+                      .range([margin.left, width - margin.right]);
+
+            const yScale = d3.scaleLinear()
+                      .domain(d3.extent(data, d => d[2])) // Posição da coluna y
+                      .range([height - margin.bottom, margin.top]);
+
+            // Adicionar pontos
+            pointsGroup.selectAll("circle")
+                .data(data)
+                .enter()
+                .append("circle")
+                .attr("cx", d => xScale(d[1]))
+                .attr("cy", d => yScale(d[2]))
+                .attr("r", 5)
+                .attr("fill", "steelblue")
+                .attr("id", d => d[0])
+                .on("click", clicked);
+        });
+
+        // Função para atualizar o gráfico com o zoom
+        function zoomed(event) {
+            pointsGroup.attr("transform", event.transform);
+        }
+
+        // Função para lidar com cliques nos pontos
+        function clicked(event, d) {
+            if (!isSelecting) {
+                d3.selectAll("circle").attr("fill", "steelblue");
+                d3.select(this).attr("fill", "red");
+
+                // Exibir detalhes do ponto clicado
+                const detailsDiv = d3.select("#details");
+                detailsDiv.html(`<h3>Detalhes</h3><p>ID: ${d[1]}</p><p>X: ${d[2]}</p><p>Y: ${d[3]}</p>`);
+            }
+        }
+
+        // Função para alternar a seleção
+        function toggleSelection() {
+            isSelecting = !isSelecting;
+
+            if (isSelecting) {
+                svg.on("mousedown", startSelection)
+                    .on("mousemove", moveSelection)
+                    .on("mouseup", endSelection);
+            } else {
+                svg.on(".mousedown", null)
+                    .on(".mousemove", null)
+                    .on(".mouseup", null);
+                resetSelection();
+            }
+        }
+
+        // Função para iniciar a seleção
+        function startSelection(event) {
+            const [x, y] = d3.pointer(event);
+            selectionStart = [x, y];
+            selectionEnd = [x, y];
+
+            svg.append("rect")
+                .attr("id", "selectionRect")
+                .attr("x", x)
+                .attr("y", y)
+                .attr("width", 0)
+                .attr("height", 0)
+                .attr("fill", "gray")
+                .attr("opacity", 0.3);
+        }
+
+        // Função para atualizar a seleção durante o movimento do mouse
+        function moveSelection(event) {
+            if (!selectionStart) return;
+
+            const [x, y] = d3.pointer(event);
+            selectionEnd = [x, y];
+
+            d3.select("#selectionRect")
+                .attr("width", Math.abs(selectionEnd[0] - selectionStart[0]))
+                .attr("height", Math.abs(selectionEnd[1] - selectionStart[1]))
+                .attr("x", Math.min(selectionStart[0], selectionEnd[0]))
+                .attr("y", Math.min(selectionStart[1], selectionEnd[1]));
+        }
+
+        // Função para finalizar a seleção
+        function endSelection() {
+            if (!selectionStart) return;
+
+            const selectedPoints = [];
+
+            d3.selectAll("circle").each(function (d) {
+                const point = d3.select(this);
+                const [x, y] = [parseFloat(point.attr("cx")), parseFloat(point.attr("cy"))];
+
+                if (x >= Math.min(selectionStart[0], selectionEnd[0]) &&
+                    x <= Math.max(selectionStart[0], selectionEnd[0]) &&
+                    y >= Math.min(selectionStart[1], selectionEnd[1]) &&
+                    y <= Math.max(selectionStart[1], selectionEnd[1])) {
+                    selectedPoints.push(d[0]);
+                    point.attr("fill", "red");
+                }
+            });
+
+            // Exibir detalhes dos pontos selecionados
+            if (selectedPoints.length > 0) {
+                d3.csv("../projecao_multidimensional/input/iris_index.csv").then(details => {
+                    const columns = Object.keys(details[0]);
+                    const table = d3.select("#details").append("table");
+                    const header = table.append("thead").append("tr");
+
+                    header.selectAll("th")
+                        .data(columns)
+                        .enter()
+                        .append("th")
+                        .text(column => column);
+
+                    const rows = table.append("tbody").selectAll("tr")
+                        .data(details.filter(d => selectedPoints.includes(d[0])))
+                        .enter()
+                        .append("tr");
+
+                    rows.selectAll("td")
+                        .data(d => columns.map(column => ({ column, value: d[column] })))
+                        .enter()
+                        .append("td")
+                        .text(d => d.value);
+                });
+            }
+
+            resetSelection();
+        }
+
+        // Função para redefinir a seleção
+        function resetSelection() {
+            selectionStart = null;
+            selectionEnd = null;
+            d3.select("#selectionRect").remove();
+        }
+    </script>
+</body>
+</html>

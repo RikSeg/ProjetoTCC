@@ -1,0 +1,8 @@
+"../projecao_multidimensional/output/Saida_ISOMAP.csv"
+"../projecao_multidimensional/output/Saida_LAMP.csv"
+"../projecao_multidimensional/output/Saida_LSP.csv"
+"../projecao_multidimensional/output/Saida_PLMP.csv"
+"../projecao_multidimensional/output/Saida_t-SNE.csv"
+
+
+../projecao_multidimensional/input/iris_index.csv

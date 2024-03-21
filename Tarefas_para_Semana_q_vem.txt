@@ -1,7 +1,7 @@
--plotar layout scatter plot (sem eixos) e definir cores pelas classes
--testar com a base iris
--desenvolver site 
-	dash 
-	selecionar um ou vários pontos e mostrar dados do(s) aluno(s) (de Antes das técnicas)
+- Ajustar a projeção para colocar o id como um atributo id da circle
+- Alterar o arquivo para adicionar classes 
+- Ajustar a projeção para colorir os circles de acordo com a classe
 
-kmeans PLMP: buscar melhores ajustes em papers, caso não tenha, fazer testes
+Ao passar o mouse no circle mostrar o id.
+Ao clicar com o mouse no circle mostrar os atributos originais.
+Implementar o brush

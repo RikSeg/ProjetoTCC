@@ -1,16 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scatter Plot with D3.js</title>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gráfico de Dispersão com D3.js</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    /* Adicione algum estilo CSS se desejar */
+  </style>
 </head>
 <body>
+  <svg width="400" height="400"></svg>
 
-<div id="scatterplot"></div>
+  <script>
+    // Carregando os dados do arquivo CSV
+    d3.text("../projecao_multidimensional/output/Saida_LSP.csv").then(function(text) {
+      // Convertendo os dados CSV em array
+      const data = d3.csvParseRows(text, d3.autoType);
+      
+      // Definindo as dimensões do gráfico
+      const width = 400;
+      const height = 400;
+      const margin = { top: 20, right: 20, bottom: 30, left: 40 };
 
-<script src="./d3.js"></script>
+      // Criando a escala para os eixos X e Y
+      const xScale = d3.scaleLinear()
+                      .domain(d3.extent(data, d => d[1])) // Posição da coluna x
+                      .range([margin.left, width - margin.right]);
 
+      const yScale = d3.scaleLinear()
+                      .domain(d3.extent(data, d => d[2])) // Posição da coluna y
+                      .range([height - margin.bottom, margin.top]);
+
+      // Criando o plano cartesiano
+      const svg = d3.select("svg");
+
+      // Desenhando os eixos X e Y
+      svg.append("g")
+         .attr("transform", `translate(0,${height - margin.bottom})`)
+         .call(d3.axisBottom(xScale));
+
+      svg.append("g")
+         .attr("transform", `translate(${margin.left},0)`)
+         .call(d3.axisLeft(yScale));
+
+      // Plotando os pontos
+      svg.selectAll("circle")
+         .data(data)
+         .enter()
+         .append("circle")
+         .attr("cx", d => xScale(d[1])) // Posição da coluna x
+         .attr("cy", d => yScale(d[2])) // Posição da coluna y
+         .attr("r", 4)
+         .attr("fill", "steelblue")
+         .attr("id", d => d[0]); // Adiciona o título com a chave
+    });
+  </script>
 </body>
 </html>
