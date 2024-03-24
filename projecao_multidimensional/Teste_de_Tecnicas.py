@@ -39,34 +39,43 @@ def lsp(matriz):
 
 
 def plmp(matriz):
-    num_landmarks = 5 #nro de clusters
+    num_landmarks = 5 # Número de clusters
 
     # Seleção de Landmarks usando KMeans
     kmeans = KMeans(n_clusters=num_landmarks)
     kmeans.fit(matriz)
     landmarks = kmeans.cluster_centers_
     
-    # Projeção Múltipla usando PCA
+    # Lista para armazenar as matrizes de projeção
     pca_models = []
+    
+    # Lista para armazenar o número de amostras próximas a cada landmark
+    num_samples_per_landmark = []
+    
     for landmark in landmarks:
         # Selecionando amostras próximas ao landmark
         distances = np.linalg.norm(matriz - landmark, axis=1)
         nearest_samples_indices = np.argsort(distances)[:5]  # 5 amostras mais próximas
         nearest_samples = matriz[nearest_samples_indices]
+        num_samples_per_landmark.append(len(nearest_samples))
         
         # Aplicando PCA nas amostras próximas ao landmark
         pca = PCA(n_components=2)
         pca.fit(nearest_samples)
         pca_models.append(pca)
     
-    # Combinando as matrizes de projeção
-    combined_projection_matrix = np.vstack([pca.components_ for pca in pca_models])
+    # Calcular as médias ponderadas das matrizes de projeção com base no número de amostras
+    combined_projection_matrix = np.zeros((2, matriz.shape[1]))
+    total_samples = sum(num_samples_per_landmark)
+    for i, pca in enumerate(pca_models):
+        weight = num_samples_per_landmark[i] / total_samples
+        combined_projection_matrix += weight * pca.components_
     
-    # Aplicando a projeção combinada nos dados originais
+    # Aplicar a projeção combinada nos dados originais
     projected_data = np.dot(matriz, combined_projection_matrix.T)
     
     return projected_data
-    return matriz
+
 
 
 def t_sne(matriz):
@@ -100,12 +109,14 @@ def processar_arquivo_entrada(nome_arquivo_entrada):
     with open(nome_arquivo_entrada, 'r', newline='') as arquivo_csv:
         leitor_csv = csv.reader(arquivo_csv)
         titulo = next(leitor_csv)
+        classes = []
         for linha in leitor_csv:
             chave = linha[0]
+            classes.append(linha[1])
             valores = linha[3:]
             dados_entrada[chave] = valores
 
-    return titulo, dados_entrada
+    return titulo,classes, dados_entrada
 
 def escrever_arquivo_saida(dados_entrada, nome_arquivo_saida):
     
@@ -114,7 +125,11 @@ def escrever_arquivo_saida(dados_entrada, nome_arquivo_saida):
     with open(nome_arquivo_saida, 'w', newline='') as arquivo_csv:
         escritor_csv = csv.writer(arquivo_csv)
         for chave, valor in dados_entrada.items():
-            escritor_csv.writerow([chave, valor[0], valor[1]])
+            print(valor)
+            classe,valor1,valor2 = valor
+            escritor_csv.writerow([chave,classe,valor1,valor2])
+
+
 
 def main():
     # Nome do arquivo de entrada e saída
@@ -137,7 +152,7 @@ def main():
         exit(0)
 
     # Processa o arquivo de entrada
-    titulo, dados_entrada = processar_arquivo_entrada(nome_arquivo_entrada)
+    titulo,classes,dados_entrada = processar_arquivo_entrada(nome_arquivo_entrada)
 
     # armazenando chaves 
     chave_dos_dados = dados_entrada.keys()
@@ -157,12 +172,14 @@ def main():
     
     # adicionando apenas o título
     dicio = {}
-    dicio[titulo[0]] = titulo[2:4]
+    dicio[titulo[0]] = titulo[1:4]
     #print(dicio)
 
     # adiciona as chaves e matriz
-    for chave, dado in zip(chave_dos_dados,matriz):
-            dicio[chave] = dado.tolist()
+    for chave, classe, dado in zip(chave_dos_dados,classes,matriz):
+            data_ = dado.tolist()
+            data_.insert(0, classe)
+            dicio[chave] = data_
 
     
     # Escreve o arquivo de saída recebendo um dicionario

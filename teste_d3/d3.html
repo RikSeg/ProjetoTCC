@@ -5,55 +5,97 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gráfico de Dispersão com D3.js</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js"></script>
+
   <style>
-    /* Adicione algum estilo CSS se desejar */
+    
   </style>
+
 </head>
 <body>
-  <svg width="400" height="400"></svg>
+
+  
+  <svg width="800" height="600"></svg>
 
   <script>
-    // Carregando os dados do arquivo CSV
-    d3.text("../projecao_multidimensional/output/Saida_LSP.csv").then(function(text) {
-      // Convertendo os dados CSV em array
-      const data = d3.csvParseRows(text, d3.autoType);
+    // Carregar o arquivo CSV
+    d3.csv("../projecao_multidimensional/output/Saida_ISOMAP.csv").then(function(data) {
       
-      // Definindo as dimensões do gráfico
-      const width = 400;
-      const height = 400;
-      const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+      // Converter valores de v1 e v2 para números
+      data.forEach(function(d) {
+        d.v1 = +d.v1;
+        d.v2 = +d.v2;
+      });
+      
+      // Definir margens e dimensões do gráfico
+      var margin = {top: 20, right: 20, bottom: 30, left: 40},
+          width = 800 - margin.left - margin.right,
+          height = 600 - margin.top - margin.bottom;
 
-      // Criando a escala para os eixos X e Y
-      const xScale = d3.scaleLinear()
-                      .domain(d3.extent(data, d => d[1])) // Posição da coluna x
-                      .range([margin.left, width - margin.right]);
+      // Definir escala x
+      var x = d3.scaleLinear()
+          .domain(d3.extent(data, function(d) { return d.v1; }))
+          .range([0, width]);
 
-      const yScale = d3.scaleLinear()
-                      .domain(d3.extent(data, d => d[2])) // Posição da coluna y
-                      .range([height - margin.bottom, margin.top]);
+      // Definir escala y
+      var y = d3.scaleLinear()
+          .domain(d3.extent(data, function(d) { return d.v2; }))
+          .range([height, 0]);
 
-      // Criando o plano cartesiano
-      const svg = d3.select("svg");
+      // Definir escala de cores para a classe
+      var color = d3.scaleOrdinal(d3.schemeCategory10);
 
-      // Desenhando os eixos X e Y
-      svg.append("g")
-         .attr("transform", `translate(0,${height - margin.bottom})`)
-         .call(d3.axisBottom(xScale));
+      // Criar elemento SVG
+      var svg = d3.select("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
 
-      svg.append("g")
-         .attr("transform", `translate(${margin.left},0)`)
-         .call(d3.axisLeft(yScale));
-
-      // Plotando os pontos
+      // Adicionar círculos
       svg.selectAll("circle")
-         .data(data)
-         .enter()
-         .append("circle")
-         .attr("cx", d => xScale(d[1])) // Posição da coluna x
-         .attr("cy", d => yScale(d[2])) // Posição da coluna y
-         .attr("r", 4)
-         .attr("fill", "steelblue")
-         .attr("id", d => d[0]); // Adiciona o título com a chave
+          .data(data)
+        .enter().append("circle")
+          .attr("cx", function(d) { return x(d.v1); })
+          .attr("cy", function(d) { return y(d.v2); })
+          .attr("r", 5) // Raio do círculo
+          .style("fill", function(d) { return color(d.class); })
+          .on("mouseover", function(event, d) {
+            // Mostrar rótulo ao passar o mouse sobre o círculo
+            var tooltip = svg.append("g")
+              .attr("class", "tooltip");
+
+            tooltip.append("rect")
+              .attr("x", x(d.v1) + 10)
+              .attr("y", y(d.v2) - 20)
+              .attr("width", 50) // Largura do retângulo
+              .attr("height", 20) // Altura do retângulo
+              .style("fill", "lightgray")
+              .style("stroke", "black");
+
+            tooltip.append("text")
+              .attr("x", x(d.v1) + 25) // Centralizando o texto horizontalmente
+              .attr("y", y(d.v2) - 5)
+              .attr("text-anchor", "middle")
+              .text(d.id);
+          })
+          .on("mouseout", function() {
+            // Remover rótulo ao retirar o mouse do círculo
+            d3.selectAll(".tooltip").remove();
+          });
+
+      
+      // Adicionar eixos
+      svg.append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x));
+
+      svg.append("g")
+          .call(d3.axisLeft(y));
+
+    }).catch(function(error) {
+      console.log("Erro ao carregar os dados: " + error);
     });
   </script>
 </body>
