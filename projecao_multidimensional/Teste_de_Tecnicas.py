@@ -172,7 +172,7 @@ def main():
     
     # adicionando apenas o título
     dicio = {}
-    dicio[titulo[0]] = titulo[1:4]
+    dicio["id"] = ["class","v1","v2"]
     #print(dicio)
 
     # adiciona as chaves e matriz
