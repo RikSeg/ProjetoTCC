@@ -69,7 +69,7 @@
               var text = tooltip.append("text")
               .attr("x", x(d.v1) + 10)
               .attr("y", y(d.v2) - 10)
-              .text(d.id+" "+d.class+" "+d.v1+" "+d.v2);
+              .text(d.id+" "+d.class);
 
             var bbox = text.node().getBBox(); // Obtém a caixa delimitadora do texto
             var padding = 5; // Espaçamento entre o texto e a borda do retângulo
