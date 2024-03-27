@@ -1,7 +1,7 @@
-- Ajustar a projeção para colocar o id como um atributo id da circle -
-- Alterar o arquivo para adicionar classes -
-- Ajustar a projeção para colorir os circles de acordo com a classe -
+- Ajustar a projeção para colocar o id como um atributo id da circle -OK
+- Alterar o arquivo para adicionar classes -OK
+- Ajustar a projeção para colorir os circles de acordo com a classe -OK
 
-Ao passar o mouse no circle mostrar o id. -
+Ao passar o mouse no circle mostrar o id. -OK
 Ao clicar com o mouse no circle mostrar os atributos originais. -
 Implementar o brush. -
