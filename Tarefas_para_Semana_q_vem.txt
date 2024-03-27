@@ -1,7 +1,13 @@
-- Ajustar a projeção para colocar o id como um atributo id da circle -OK
-- Alterar o arquivo para adicionar classes -OK
-- Ajustar a projeção para colorir os circles de acordo com a classe -OK
-
-Ao passar o mouse no circle mostrar o id. -OK
 Ao clicar com o mouse no circle mostrar os atributos originais. -
 Implementar o brush. -
+
+Documentar todo o processo e uso do programa
+Usar dados extraídos para análise:
+    GSI002 - Introdução à Programação de Computadores
+    GSI005 - Lógica para Computação
+    GSI006 - Estrutura de Dados 1
+    GSI007 - Matemática 1
+    GSI015 - Programação Orientada a Objetos 1
+    GSI011 - Estrutura de Dados 2
+    GSI015 - Programação Orientada a Objetos 1
+    GSI016 - Banco de Dados 1

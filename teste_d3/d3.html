@@ -35,19 +35,19 @@
       // Definir escala x
       var x = d3.scaleLinear()
           .domain(d3.extent(data, function(d) { return d.v1; }))
-          .range([0, width]);
+          .range([0, width-50]);
 
       // Definir escala y
       var y = d3.scaleLinear()
           .domain(d3.extent(data, function(d) { return d.v2; }))
-          .range([height, 0]);
+          .range([height-50, 0]);
 
       // Definir escala de cores para a classe
       var color = d3.scaleOrdinal(d3.schemeCategory10);
 
       // Criar elemento SVG
       var svg = d3.select("svg")
-          .attr("width", width + margin.left + margin.right)
+          .attr("width", width + margin.left + margin.right+200)
           .attr("height", height + margin.top + margin.bottom)
         .append("g")
           .attr("transform",
