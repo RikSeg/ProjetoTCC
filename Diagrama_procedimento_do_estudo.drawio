@@ -1,0 +1,39 @@
+<mxfile host="app.diagrams.net" modified="2024-03-31T20:14:52.517Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="zBnwFaWnlJo9EkHFNYB0" version="24.2.1" type="device">
+  <diagram name="Página-1" id="OoRngsGuCkDnl-2Apq-0">
+    <mxGraphModel dx="1050" dy="530" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="i0NMxWBDtRQKv-ihosQd-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="i0NMxWBDtRQKv-ihosQd-2" target="i0NMxWBDtRQKv-ihosQd-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="i0NMxWBDtRQKv-ihosQd-2" value="Dados de Entrada" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="1">
+          <mxGeometry x="20" y="180" width="110" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="i0NMxWBDtRQKv-ihosQd-3" value="Teste_de_Tecnicas.py" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="170" y="220" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="i0NMxWBDtRQKv-ihosQd-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="i0NMxWBDtRQKv-ihosQd-7" target="i0NMxWBDtRQKv-ihosQd-11">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="530" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i0NMxWBDtRQKv-ihosQd-7" value="Saída" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="1">
+          <mxGeometry x="340" y="180" width="110" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="i0NMxWBDtRQKv-ihosQd-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="i0NMxWBDtRQKv-ihosQd-3" target="i0NMxWBDtRQKv-ihosQd-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="i0NMxWBDtRQKv-ihosQd-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="i0NMxWBDtRQKv-ihosQd-11" target="i0NMxWBDtRQKv-ihosQd-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="i0NMxWBDtRQKv-ihosQd-11" value="Script D3" style="shape=card;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="197.5" width="80" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="i0NMxWBDtRQKv-ihosQd-13" value="HTML" style="shape=card;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="690" y="200" width="80" height="100" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

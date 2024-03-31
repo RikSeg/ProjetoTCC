@@ -112,8 +112,8 @@ def processar_arquivo_entrada(nome_arquivo_entrada):
         classes = []
         for linha in leitor_csv:
             chave = linha[0]
-            classes.append(linha[1])
-            valores = linha[3:]
+            classes.append(linha[4])
+            valores = linha[6:]
             dados_entrada[chave] = valores
 
     return titulo,classes, dados_entrada
@@ -133,20 +133,21 @@ def escrever_arquivo_saida(dados_entrada, nome_arquivo_saida):
 
 def main():
     # Nome do arquivo de entrada e saída
-    nome_arquivo_entrada = "./input/iris_index.csv" #input("Digite o nome do arquivo CSV de entrada: ")
+    nome_arquivo = "GSI002"
+    nome_arquivo_entrada = "./input/" + nome_arquivo + ".csv" #endereço de busca
     
     tecnica = int(input("Técnicas de teste:\n1: ISOMAP - (Isometric Mapping)\n2: LAMP\t - (Linear Aggregation of Multiple Projections)\n3: LSP\t - (Least Squares Projections)\n4: PLMP\t - (Projected Landmark Multi-Projection) - OBS.:Usa KMeans\n5: t-SNE - (t-distributed Stochastic Neighbor Embedding)\nDigite o número da tecnica: "))
 
     if tecnica == 1:
-        nome_arquivo_saida = "Saida_ISOMAP.csv"
+        nome_arquivo_saida = "Saida_ISOMAP_"+ nome_arquivo +".csv"
     elif tecnica == 2:
-        nome_arquivo_saida = "Saida_LAMP.csv"
+        nome_arquivo_saida = "Saida_LAMP_"+ nome_arquivo +".csv"
     elif tecnica == 3:
-        nome_arquivo_saida = "Saida_LSP.csv"
+        nome_arquivo_saida = "Saida_LSP_"+ nome_arquivo +".csv"
     elif tecnica == 4:
-        nome_arquivo_saida = "Saida_PLMP.csv"
+        nome_arquivo_saida = "Saida_PLMP_"+ nome_arquivo +".csv"
     elif tecnica == 5:
-        nome_arquivo_saida = "Saida_t-SNE.csv"
+        nome_arquivo_saida = "Saida_t-SNE_"+ nome_arquivo +".csv"
     else:
         print("ERRO: não foi selecionada uma técnica válida")
         exit(0)
