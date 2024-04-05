@@ -1,8 +1,9 @@
-Ao clicar com o mouse no circle mostrar os atributos originais. -
-Implementar o brush. -
+Ao clicar com o mouse no circle mostrar os atributos originais. - AINDA NÃO
+Implementar o brush. - AINDA NÃO
 
-Documentar todo o processo e uso do programa
-Usar dados extraídos para análise:
+Documentar todo o processo de uso do programa e análise dos dados - FAZENDO
+
+Usar dados extraídos para análise:                      -   BRANCH CRIADA PARA ISSO
     GSI002 - Introdução à Programação de Computadores
     GSI005 - Lógica para Computação
     GSI006 - Estrutura de Dados 1

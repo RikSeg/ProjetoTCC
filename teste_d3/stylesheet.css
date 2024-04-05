@@ -1,5 +1,24 @@
-        .brush .extent {
-            fill: rgba(255, 255, 255, 0.3);
-            stroke: #fff;
-            shape-rendering: crispEdges;
-        }
+/* Estilização da tabela */
+.styled-table {
+    width: 50%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+}
+
+.styled-table th, 
+.styled-table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Estilização das linhas alternadas */
+.styled-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Estilização do cabeçalho da tabela */
+.styled-table th {
+    background-color: #007bff;
+    color: white;
+}

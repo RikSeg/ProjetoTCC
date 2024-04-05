@@ -1,5 +1,5 @@
 // Carregar o arquivo CSV
-    d3.csv("../projecao_multidimensional/output/Saida_ISOMAP.csv").then(function(data) {
+    d3.csv("../projecao_multidimensional/output/Saida_t-SNE_GSI002.csv").then(function(data) {
       
       // Converter valores de v1 e v2 para números
       data.forEach(function(d) {
@@ -45,8 +45,9 @@
             // Mostrar rótulo ao passar o mouse sobre o círculo
             var tooltip = svg.append("g")
               .attr("class", "tooltip");
+              
 
-              var text = tooltip.append("text")
+            var text = tooltip.append("text")
               .attr("x", x(d.v1) + 10)
               .attr("y", y(d.v2) - 10)
               .text(d.id+" "+d.class);
@@ -68,14 +69,29 @@
           });
           
 
-      
-      // Adicionar eixos
-      svg.append("g")
-          .attr("transform", "translate(0," + height + ")")
-          .call(d3.axisBottom(x));
+          // Adicionar brush
+         // var brush = d3.brush()
+         //     .extent([[0, 0], [width, height]])
+         //     .on("end", brushed);
+         // svg.call(brush);
+         // // Função para lidar com a seleção do brush
+         // function brushed(event) {
+         //   if (!event.selection) return;
+         //   var [[x0, y0], [x1, y1]] = event.selection;
+         //   svg.selectAll("circle")
+         //     .classed("selected", d => x0 <= x(d.v1) && x(d.v1) <= x1 && y0 <= y(d.v2) && y(d.v2) <= y1)
+         //     
+         // }
 
-      svg.append("g")
-          .call(d3.axisLeft(y));
+
+      
+      // Adicionar eixos visíveis
+      //svg.append("g")
+      //    .attr("transform", "translate(0," + height + ")")
+      //    .call(d3.axisBottom(x));
+
+      //svg.append("g")
+      //    .call(d3.axisLeft(y));
 
     }).catch(function(error) {
       console.log("Erro ao carregar os dados: " + error);
