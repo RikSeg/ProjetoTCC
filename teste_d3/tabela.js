@@ -19,7 +19,6 @@ function carregarCSV(nomeArquivo) {
                 .enter()
                 .append('tr')
                 .attr('id', function(d) { return d.IDT_MATRICULA; })
-                .classed("table",true);
 
             linhas.selectAll('td')
                 .data(function (d) { 
