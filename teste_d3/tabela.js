@@ -5,6 +5,8 @@ function carregarCSV(nomeArquivo) {
             
             console.log(data.columns);
             var colunas = data.columns;
+
+
             // Cria o cabeçalho da tabela
             var cabecalho = tabela.select("thead").append('tr');
             data.columns.forEach(function (key) {
@@ -20,10 +22,13 @@ function carregarCSV(nomeArquivo) {
                 .classed("table",true);
 
             linhas.selectAll('td')
-                .data(function (d) { return Object.values(d); })
+                .data(function (d) { 
+                    return colunas.map(function(column) {
+                    return {column: column, value: d[column]};
+                }); })
                 .enter()
                 .append('td')
-                .text(function (d) { return d; });
+                .text(function (d) { return d.value; });
         })
         .catch(function (error) {
             console.error('Falha ao carregar o arquivo CSV:', error);
