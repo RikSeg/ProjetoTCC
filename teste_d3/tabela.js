@@ -3,20 +3,21 @@ function carregarCSV(nomeArquivo) {
         .then(function (data) {
             var tabela = d3.select('#tabela_dados');
             
-            // Limpa o conteúdo atual da tabela
-            tabela.selectAll('*').remove();
-
+            console.log(data.columns);
+            var colunas = data.columns;
             // Cria o cabeçalho da tabela
-            var cabecalho = tabela.append('tr');
-            Object.keys(data[0]).forEach(function (key) {
+            var cabecalho = tabela.select("thead").append('tr');
+            data.columns.forEach(function (key) {
                 cabecalho.append('th').text(key);
             });
 
             // Preenche os dados da tabela
-            var linhas = tabela.selectAll('tr')
+            var linhas = tabela.selectAll("tbody")
                 .data(data)
                 .enter()
-                .append('tr');
+                .append('tr')
+                .attr('id', function(d) { return d.IDT_MATRICULA; })
+                .classed("table",true);
 
             linhas.selectAll('td')
                 .data(function (d) { return Object.values(d); })

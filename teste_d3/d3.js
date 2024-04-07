@@ -1,16 +1,20 @@
 // Carregar o arquivo CSV
     d3.csv("../projecao_multidimensional/output/Saida_t-SNE_GSI002.csv").then(function(data) {
       
+      var tabela_detalhe = d3.select("#container_table").select("#details").select("#tabela-dados");
+
+
       // Converter valores de v1 e v2 para números
       data.forEach(function(d) {
         d.v1 = +d.v1;
         d.v2 = +d.v2;
+        d.id = d.id;
       });
       
       // Definir margens e dimensões do gráfico
       var margin = {top: 20, right: 20, bottom: 30, left: 40},
-          width = 800 - margin.left - margin.right,
-          height = 600 - margin.top - margin.bottom;
+          width = 700 - margin.left - margin.right,
+          height = 500 - margin.top - margin.bottom;
 
       // Definir escala x
       var x = d3.scaleLinear()
@@ -25,13 +29,15 @@
       // Definir escala de cores para a classe
       var color = d3.scaleOrdinal(d3.schemeCategory10);
 
+      table = d3.select("#tabela-dados")
       // Criar elemento SVG
       var svg = d3.select("svg")
-          .attr("width", width + margin.left + margin.right+200)
+          .attr("width", width + margin.left + margin.right+100)
           .attr("height", height + margin.top + margin.bottom)
         .append("g")
           .attr("transform",
                 "translate(" + margin.left + "," + margin.top + ")");
+
 
       // Adicionar círculos
       svg.selectAll("circle")
@@ -41,6 +47,7 @@
           .attr("cy", function(d) { return y(d.v2); })
           .attr("r", 5) // Raio do círculo
           .style("fill", function(d) { return color(d.class); })
+          .attr("id",function(d){return d.id;})
           .on("mouseover", function(event, d) {
             // Mostrar rótulo ao passar o mouse sobre o círculo
             var tooltip = svg.append("g")
@@ -68,22 +75,32 @@
             d3.selectAll(".tooltip").remove();
           });
           
-
           // Adicionar brush
-         // var brush = d3.brush()
-         //     .extent([[0, 0], [width, height]])
-         //     .on("end", brushed);
-         // svg.call(brush);
-         // // Função para lidar com a seleção do brush
-         // function brushed(event) {
-         //   if (!event.selection) return;
-         //   var [[x0, y0], [x1, y1]] = event.selection;
-         //   svg.selectAll("circle")
-         //     .classed("selected", d => x0 <= x(d.v1) && x(d.v1) <= x1 && y0 <= y(d.v2) && y(d.v2) <= y1)
-         //     
-         // }
-
-
+          var brush = d3.brush()
+              .extent([[-10, -10], [width, height]])
+              .on("end", brushed);
+          svg.call(brush);
+          // Função para lidar com a seleção do brush
+          function brushed(event) {
+            if (!event.selection) return;
+            var [[x0, y0], [x1, y1]] = event.selection;
+            svg.selectAll("circle")
+            .attr("class", function(d) {
+                var isSelected = x0 <= x(d.v1) && x(d.v1) <= x1 && y0 <= y(d.v2) && y(d.v2) <= y1;
+                // Atualizar as classes dos elementos <tr> na tabela
+                tabela_detalhe.selectAll("tr")
+                    .attr("class", function(tr) {
+                        if (tr.id === d.id && isSelected) {
+                            ;
+                        } else {
+                            return null; // Remover a classe se não estiver selecionada
+                        }
+                    });
+                return null; // Remover a classe dos círculos
+            });
+          
+              
+          }
       
       // Adicionar eixos visíveis
       //svg.append("g")

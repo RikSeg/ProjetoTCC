@@ -22,3 +22,16 @@
     background-color: #007bff;
     color: white;
 }
+
+.scatter-plot-box{
+    border-width: 5px;
+    border-color: black;
+}
+
+.visible{
+    visibility: visible;
+}
+
+.invisible{
+    visibility: hidden;
+}
