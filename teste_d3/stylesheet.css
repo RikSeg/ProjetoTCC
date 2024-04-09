@@ -35,3 +35,13 @@
 .invisible{
     visibility: hidden;
 }
+
+.table-scrollable {
+    max-height: 300px; /* Defina a altura máxima da tabela */
+    max-width: 800px;
+    overflow-y: auto;
+    overflow-x: auto; /* Torna a tabela rolável verticalmente */
+    position: relative;
+    font-size: small;
+  }
+  

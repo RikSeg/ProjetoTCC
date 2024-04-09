@@ -3,7 +3,6 @@ function carregarCSV(nomeArquivo) {
         .then(function (data) {
             var tabela = d3.select('#tabela_dados');
             
-            console.log(data.columns);
             var colunas = data.columns;
 
 
@@ -14,7 +13,7 @@ function carregarCSV(nomeArquivo) {
             });
 
             tbody = tabela.select("#corpo_tabela");
-            
+
             if (tbody.empty()) {
                 tbody = tabela.append("#corpo_tabela");
             }

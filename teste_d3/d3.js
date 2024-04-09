@@ -13,8 +13,8 @@
       
       // Definir margens e dimensões do gráfico
       var margin = {top: 20, right: 20, bottom: 30, left: 40},
-          width = 700 - margin.left - margin.right,
-          height = 500 - margin.top - margin.bottom;
+          width = 600 - margin.left - margin.right,
+          height = 400 - margin.top - margin.bottom;
 
       // Definir escala x
       var x = d3.scaleLinear()
@@ -88,10 +88,11 @@
             .attr("class", function(d) {
                 var isSelected = x0 <= x(d.v1) && x(d.v1) <= x1 && y0 <= y(d.v2) && y(d.v2) <= y1;
                 // Atualizar as classes dos elementos <tr> na tabela
+                if(isSelected){return "selected";}
                 tabela_detalhe.selectAll("tr")
                     .attr("class", function(tr) {
-                        if (tr.id === d.id && isSelected) {
-                            ;
+                        if (tr.IDT_MATRICULA === d.id && isSelected) {
+                            return "visible";
                         } else {
                             return null; // Remover a classe se não estiver selecionada
                         }
