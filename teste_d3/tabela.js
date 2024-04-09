@@ -8,13 +8,18 @@ function carregarCSV(nomeArquivo) {
 
 
             // Cria o cabeçalho da tabela
-            var cabecalho = tabela.select("thead").append('tr');
+            var cabecalho = tabela.select("#titulo_tabela").append('tr').attr("id","head");
             data.columns.forEach(function (key) {
                 cabecalho.append('th').text(key);
             });
 
+            tbody = tabela.select("#corpo_tabela");
+            
+            if (tbody.empty()) {
+                tbody = tabela.append("#corpo_tabela");
+            }
             // Preenche os dados da tabela
-            var linhas = tabela.selectAll("tbody")
+            var linhas = tbody.selectAll("tr")
                 .data(data)
                 .enter()
                 .append('tr')
