@@ -1,7 +1,54 @@
-// Carregar o arquivo CSV
+//Carrega a tabela
+function carregarCSV(nomeArquivo) {
+  d3.csv(nomeArquivo)
+      .then(function (data) {
+          var tabela = d3.select('#tabela_dados');
+          
+          var colunas = data.columns;
+
+
+          // Cria o cabeçalho da tabela
+          var cabecalho = tabela.select("#titulo_tabela").append('tr').attr("id","head");
+          data.columns.forEach(function (key) {
+              cabecalho.append('th').text(key);
+          });
+
+          tbody = tabela.select("#corpo_tabela");
+
+          if (tbody.empty()) {
+              tbody = tabela.append("#corpo_tabela");
+          }
+          // Preenche os dados da tabela
+          var linhas = tbody.selectAll("tr")
+              .data(data)
+              .enter()
+              .append('tr')
+              .attr('id', function(d) { return d.IDT_MATRICULA; })
+
+          linhas.selectAll('td')
+              .data(function (d) { 
+                  return colunas.map(function(column) {
+                  return {column: column, value: d[column]};
+              }); })
+              .enter()
+              .append('td')
+              .text(function (d) { return d.value; });
+      })
+      .catch(function (error) {
+          console.error('Falha ao carregar o arquivo CSV:', error);
+      });
+}
+
+// Chame a função passando o nome do arquivo CSV
+carregarCSV('../projecao_multidimensional/input/GSI002.csv');
+
+
+
+
+// Carregar o Gráfico
     d3.csv("../projecao_multidimensional/output/Saida_t-SNE_GSI002.csv").then(function(data) {
       
-      var tabela_detalhe = d3.select("#container_table").select("#details").select("#tabela-dados");
+     
 
 
       // Converter valores de v1 e v2 para números
@@ -48,32 +95,7 @@
           .attr("r", 5) // Raio do círculo
           .style("fill", function(d) { return color(d.class); })
           .attr("id",function(d){return d.id;})
-          .on("mouseover", function(event, d) {
-            // Mostrar rótulo ao passar o mouse sobre o círculo
-            var tooltip = svg.append("g")
-              .attr("class", "tooltip");
-              
-
-            var text = tooltip.append("text")
-              .attr("x", x(d.v1) + 10)
-              .attr("y", y(d.v2) - 10)
-              .text(d.id+" "+d.class);
-
-            var bbox = text.node().getBBox(); // Obtém a caixa delimitadora do texto
-            var padding = 5; // Espaçamento entre o texto e a borda do retângulo
-
-            tooltip.insert("rect", "text") // Insere o retângulo antes do texto
-              .attr("x", bbox.x - padding)
-              .attr("y", bbox.y - padding)
-              .attr("width", bbox.width + 2 * padding)
-              .attr("height", bbox.height + 2 * padding)
-              .style("fill", "lightgray")
-              .style("stroke", "black");
-          })
-          .on("mouseout", function() {
-            // Remover rótulo ao retirar o mouse do círculo
-            d3.selectAll(".tooltip").remove();
-          });
+        
           
           // Adicionar brush
           var brush = d3.brush()
@@ -84,24 +106,35 @@
           function brushed(event) {
             if (!event.selection) return;
             var [[x0, y0], [x1, y1]] = event.selection;
+            
+            // Selecionar os pontos dentro da área do brush
+            var selectedIds = [];
             svg.selectAll("circle")
-            .attr("class", function(d) {
-                var isSelected = x0 <= x(d.v1) && x(d.v1) <= x1 && y0 <= y(d.v2) && y(d.v2) <= y1;
-                // Atualizar as classes dos elementos <tr> na tabela
-                if(isSelected){return "selected";}
-                tabela_detalhe.selectAll("tr")
-                    .attr("class", function(tr) {
-                        if (tr.IDT_MATRICULA === d.id && isSelected) {
-                            return "visible";
-                        } else {
-                            return null; // Remover a classe se não estiver selecionada
-                        }
-                    });
-                return null; // Remover a classe dos círculos
-            });
+                .attr("class", function(d) {
+                    var isSelected = x0 <= x(d.v1) && x(d.v1) <= x1 && y0 <= y(d.v2) && y(d.v2) <= y1;
+                    if(isSelected) selectedIds.push(d.id);
+                    return isSelected ? "selected" : null; 
+                });
+            var tabela_detalhe = d3.select("#tabela_dados").selectAll("tr").nodes();
           
-              
-          }
+            // Selecionar as linhas da tabela que correspondem aos pontos selecionados
+            var nomesElementos = tabela_detalhe.map(function(elemento) {
+              return elemento.getAttribute("id"); // Retorna o nome do nó do elemento (por exemplo, "TR")
+          });
+          console.log(nomesElementos);
+
+            nomesElementos.forEach(function(d) {
+              if(selectedIds.includes(d)){
+                d3.select("#tabela_dados").select("tbody").select('[id="'+d+'"]')
+                .attr("class","visible");
+                
+              }else{
+                d3.select("#tabela_dados").select("tbody").select('[id="'+d+'"]')
+                .attr("class","invisible");
+              }
+            });
+        }
+        
       
       // Adicionar eixos visíveis
       //svg.append("g")

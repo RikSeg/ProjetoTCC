@@ -29,11 +29,11 @@
 }
 
 .visible{
-    visibility: visible;
+   display: auto;
 }
 
 .invisible{
-    visibility: hidden;
+    display: none;
 }
 
 .table-scrollable {
