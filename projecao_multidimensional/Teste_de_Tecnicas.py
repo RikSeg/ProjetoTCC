@@ -6,7 +6,7 @@ from sklearn.decomposition import TruncatedSVD
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
-import umap
+import umap.umap_ as umap
 
 def default_case():
     print("Erro: operação desconhecida")
@@ -133,7 +133,7 @@ def escrever_arquivo_saida(dados_entrada, nome_arquivo_saida):
 
 def main():
     # Nome do arquivo de entrada e saída
-    nome_arquivo = "GSI002"
+    nome_arquivo = "GSI016"
     nome_arquivo_entrada = "./input/" + nome_arquivo + ".csv" #endereço de busca
     
     tecnica = int(input("Técnicas de teste:\n1: ISOMAP - (Isometric Mapping)\n2: LAMP\t - (Linear Aggregation of Multiple Projections)\n3: LSP\t - (Least Squares Projections)\n4: PLMP\t - (Projected Landmark Multi-Projection) - OBS.:Usa KMeans\n5: t-SNE - (t-distributed Stochastic Neighbor Embedding)\nDigite o número da tecnica: "))
