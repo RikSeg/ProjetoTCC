@@ -42,11 +42,25 @@ function carregarCSV(nomeArquivo) {
 // Chame a função passando o nome do arquivo CSV
 carregarCSV('../projecao_multidimensional/input/GSI002.csv');
 
+//arquivos usados:
+//GSI002.csv
+//GSI005.csv
+//GSI006.csv
+//GSI007.csv
+//GSI011.csv
+//GSI015.csv
+//GSI016.csv
+
 
 
 
 // Carregar o Gráfico
-    d3.csv("../projecao_multidimensional/output/Saida_t-SNE_GSI002.csv").then(function(data) {
+//Saida_ ISOMAP
+//Saida_ LAMP 
+//Saida_ LSP 
+//Saida_ PLMP
+//Saida_ t-SNE
+    d3.csv("../projecao_multidimensional/output/Saida_ISOMAP_GSI002.csv").then(function(data) {
       
      
 
