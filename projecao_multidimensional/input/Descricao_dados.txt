@@ -1,7 +1,7 @@
 Angélica me passou os dados para você utilizar nas projeções, para as disciplinas GSI001 até GSI020, que envio em anexo. O cabeçalho dos dados é o seguinte:
 
 IDT_MATRICULA: matrícula do aluno
-IDT_TURMA: turma na qual o aluno está matriculado (veja que ele pode aparecer mais de uma vez, caso tenha feito a disciplina e reprovado
+IDT_TURMA: turma na qual o aluno está matriculado (veja que ele pode aparecer mais de uma vez, caso tenha feito a disciplina e reprovado)
 COD_DISCIPLINA: código da disciplina, como aparece no site da FACOM
 VLR_MEDIA: média final do aluno
 DSC_SITUACAO_FINAL: situação final do aluno (Aprovado ou reprovado)
