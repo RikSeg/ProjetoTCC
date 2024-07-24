@@ -9,7 +9,9 @@
   - a visualização do desempenho de alunos por professores que estão ministrando uma matéria específica (presenças e notas da matéria ministrada);
   - e a Visualização para o aluno observar seu progresso na grade curricular (permite o monitoramento pelo proprio aluno de como ele está se desenvolvendo);
 - Para tornar as visualizações melhores seria interessante o uso de filtros sobre cada visualização que permitisse uma observação mais detalhada.
-### Para rodar o projeto:
-- precisa de npm e Angular instalados e atualizados
-- "cd dashboardApp" para entrar no diretório do projeto
-- "npm start" para iniciar o servidor de desenvovimento
+
+### Bibliotecas
+- Pandas
+- Numpy
+- scikit-learn
+- umap-learn
