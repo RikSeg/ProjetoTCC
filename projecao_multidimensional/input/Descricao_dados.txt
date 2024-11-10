@@ -5,7 +5,8 @@ IDT_TURMA: turma na qual o aluno está matriculado (veja que ele pode aparecer m
 COD_DISCIPLINA: código da disciplina, como aparece no site da FACOM
 VLR_MEDIA: média final do aluno
 DSC_SITUACAO_FINAL: situação final do aluno (Aprovado ou reprovado)
-LISTA DE TÓPICOS: lista com os ids dos tópicos ministrados na disciplina, de acordo com a ficha da mesma, e a situação do aluno naquele tópico (0: faltou, 1: compareceu. 2: tópico não ministrado naquela turma)
+LISTA DE TÓPICOS: lista com os ids dos tópicos ministrados na disciplina, de acordo com a ficha da mesma, e a situação do aluno naquele tópico 
+(0: faltou, 1: compareceu. 2: tópico não ministrado naquela turma)
 
 OBSERVAÇÕES
 - Cada disciplina tem um conjunto diferente de tópicos, então será uma projeção por disciplina, ok? Não faz sentido misturar as planilhas.

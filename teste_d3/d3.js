@@ -40,7 +40,7 @@ function carregarCSV(nomeArquivo) {
 }
 
 // Chame a função passando o nome do arquivo CSV
-carregarCSV('../projecao_multidimensional/input/GSI002.csv');
+carregarCSV('../projecao_multidimensional/input/GSI002_col1.csv');
 
 //arquivos usados:
 //GSI002.csv
@@ -60,7 +60,7 @@ carregarCSV('../projecao_multidimensional/input/GSI002.csv');
 //Saida_ LSP 
 //Saida_ PLMP
 //Saida_ t-SNE
-    d3.csv("../projecao_multidimensional/output/Saida_ISOMAP_GSI002.csv").then(function(data) {
+    d3.csv("../projecao_multidimensional/output/Saida_t-SNE_GSI002_col1.csv").then(function(data) {
       
      
 
