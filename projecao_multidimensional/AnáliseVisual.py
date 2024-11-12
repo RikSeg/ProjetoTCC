@@ -52,7 +52,7 @@ def barrasPresencas(df):
     counts = {value: (df_data == value).sum() for value in [0, 1, 2]}
 
     presenca_map = {0: 'Ausente', 1: 'Presente', 2: 'Não Ministrada'}
-    
+    cores= {0:'red', 1:'green', 2:'blue'}
     # Criando o gráfico de barras agrupadas
     fig = go.Figure()
     for value, count_series in counts.items():
@@ -60,7 +60,8 @@ def barrasPresencas(df):
             go.Bar(
                 x=count_series.index, 
                 y=count_series.values, 
-                name=presenca_map[value]
+                name=presenca_map[value],
+                marker=dict(color=cores[value])
             )
         )
 
@@ -122,13 +123,15 @@ with col2:
     if event['selection'].get('points') == []:
         st.write("Nenhuma seleção foi feita")
         st.dataframe(df_dados)
-        subcol1,subcol2,subcol3 = st.columns(3)
+        subcol1,subcol2,subcol3,subcol4 = st.columns(4)
         with subcol1:
             st.metric("Alunos:",len(df_dados))
         with subcol2:
             st.metric("Aprovados:",len(df_dados[df_dados['DSC_SITUACAO_FINAL']=='Aprovado']))
         with subcol3:
             st.metric("Reprovados:",len(df_dados[df_dados['DSC_SITUACAO_FINAL']=='Reprovado']))
+        with subcol4:
+            st.metric("Total de Turmas:",len(df_dados['IDT_TURMA'].unique()))
         barrasPresencas(df_dados)
     elif event and isinstance(event, dict) and 'selection' in event and isinstance(event['selection'], dict) and isinstance(event['selection'].get('points'), list):
         selected_ids = [point['customdata'][0] for point in event['selection']['points'] if 'customdata' in point]
@@ -136,13 +139,15 @@ with col2:
         st.write("Dados da Disciplina (Filtrados pela Seleção)")
         st.dataframe(filtered_df)
 
-        subcol1,subcol2,subcol3 = st.columns(3)
+        subcol1,subcol2,subcol3,subcol4 = st.columns(4)
         with subcol1:
             st.metric("Alunos:",len(filtered_df))
         with subcol2:
             st.metric("Aprovados:",len(filtered_df[filtered_df['DSC_SITUACAO_FINAL']=='Aprovado']))
         with subcol3:
             st.metric("Reprovados:",len(filtered_df[filtered_df['DSC_SITUACAO_FINAL']=='Reprovado']))
+        with subcol4:
+            st.metric("Total de Turmas:",len(filtered_df['IDT_TURMA'].unique()))
         barrasPresencas(filtered_df)
     else:
         st.write("Os dados de seleção não foram capturados corretamente.")
