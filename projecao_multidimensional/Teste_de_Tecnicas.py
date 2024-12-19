@@ -5,8 +5,11 @@ from sklearn.manifold import Isomap
 from sklearn.decomposition import TruncatedSVD
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-from sklearn.cluster import KMeans
-import umap
+
+
+#import umap.umap_ as umap
+
+epsilon = 1e-7
 
 def default_case():
     print("Erro: operação desconhecida")
@@ -16,15 +19,6 @@ def isomap(matriz):
     isomap = Isomap(n_components=2)
     matriz_saida = isomap.fit_transform(matriz)
     return matriz_saida
-
-def lamp(matriz):
-    # Criar uma instância do modelo UMAP com LAMP
-    mapper = umap.UMAP(metric='cosine', n_components=2)
-
-    # Ajustar o modelo aos dados e transformá-los
-    matriz_saida = mapper.fit_transform(matriz)
-    return matriz_saida
-
 
 def lsp(matriz):
     # Normalizando os dados
@@ -38,48 +32,44 @@ def lsp(matriz):
     return matriz_saida
 
 
-def plmp(matriz):
-    num_landmarks = 5 # Número de clusters
+def plmp(matriz, n_segmentos=2):
+    """
+    Função para aplicar PLMP (Part-Linear Multidimensional Projection) em uma matriz de dados.
 
-    # Seleção de Landmarks usando KMeans
-    kmeans = KMeans(n_clusters=num_landmarks)
-    kmeans.fit(matriz)
-    landmarks = kmeans.cluster_centers_
-    
-    # Lista para armazenar as matrizes de projeção
-    pca_models = []
-    
-    # Lista para armazenar o número de amostras próximas a cada landmark
-    num_samples_per_landmark = []
-    
-    for landmark in landmarks:
-        # Selecionando amostras próximas ao landmark
-        distances = np.linalg.norm(matriz - landmark, axis=1)
-        nearest_samples_indices = np.argsort(distances)[:5]  # 5 amostras mais próximas
-        nearest_samples = matriz[nearest_samples_indices]
-        num_samples_per_landmark.append(len(nearest_samples))
-        
-        # Aplicando PCA nas amostras próximas ao landmark
-        pca = PCA(n_components=2)
-        pca.fit(nearest_samples)
-        pca_models.append(pca)
-    
-    # Calcular as médias ponderadas das matrizes de projeção com base no número de amostras
-    combined_projection_matrix = np.zeros((2, matriz.shape[1]))
-    total_samples = sum(num_samples_per_landmark)
-    for i, pca in enumerate(pca_models):
-        weight = num_samples_per_landmark[i] / total_samples
-        combined_projection_matrix += weight * pca.components_
-    
-    # Aplicar a projeção combinada nos dados originais
-    projected_data = np.dot(matriz, combined_projection_matrix.T)
-    
-    return projected_data
+    Parâmetros:
+    - matriz: numpy array ou DataFrame contendo os dados de entrada.
+    - n_segmentos: número de segmentos nos quais a matriz será dividida.
+    - n_componentes: número de componentes principais para a projeção linear (PCA).
+
+    Retorna:
+    - Uma matriz com as projeções combinadas.
+    """
+
+    # Função para segmentar os dados
+    def segmentar_dados(matriz, n_segmentos):
+        return np.array_split(matriz, n_segmentos)
+
+    # Função para aplicar PCA em cada segmento
+    def aplicar_pca_segmento(segmento, n_componentes=2):
+        pca = PCA(n_components=n_componentes)
+        pca_projetado = pca.fit_transform(segmento)
+        return pca_projetado
+
+    # Segmentar os dados
+    segmentos = segmentar_dados(matriz, n_segmentos)
+
+    # Aplicar PCA a cada segmento
+    projecoes = [aplicar_pca_segmento(segmento) for segmento in segmentos]
+
+    # Combinar todas as projeções em uma única matriz
+    projecao_final = np.vstack(projecoes)
+
+    return projecao_final
 
 
 
 def t_sne(matriz):
-    tsne = TSNE(n_components=2, random_state=42)
+    tsne = TSNE(n_components=2)
 
     # Ajustar o modelo aos dados e transformá-los
     matriz_saida = tsne.fit_transform(matriz) 
@@ -89,10 +79,9 @@ def t_sne(matriz):
 # Dicionário de casos
 switch = {
     1: isomap,
-    2: lamp,
-    3: lsp,
-    4: plmp,
-    5: t_sne
+    2: lsp,
+    3: plmp,
+    4: t_sne 
 }
 
 # Define a função que será aplicada aos valores associados a cada chave
@@ -112,8 +101,8 @@ def processar_arquivo_entrada(nome_arquivo_entrada):
         classes = []
         for linha in leitor_csv:
             chave = linha[0]
-            classes.append(linha[1])
-            valores = linha[3:]
+            classes.append(linha[4])
+            valores = linha[5:]
             dados_entrada[chave] = valores
 
     return titulo,classes, dados_entrada
@@ -125,28 +114,33 @@ def escrever_arquivo_saida(dados_entrada, nome_arquivo_saida):
     with open(nome_arquivo_saida, 'w', newline='') as arquivo_csv:
         escritor_csv = csv.writer(arquivo_csv)
         for chave, valor in dados_entrada.items():
-            print(valor)
-            classe,valor1,valor2 = valor
-            escritor_csv.writerow([chave,classe,valor1,valor2])
+            #print(valor)
+            if len(valor) == 2:
+                classe,valor1 = valor
+                escritor_csv.writerow([chave,classe,valor1])
+            else:
+                classe,valor1,valor2 = valor
+                escritor_csv.writerow([chave,classe,valor1,valor2])
 
 
 
 def main():
     # Nome do arquivo de entrada e saída
-    nome_arquivo_entrada = "./input/iris_index.csv" #input("Digite o nome do arquivo CSV de entrada: ")
+    nome_arquivo = "GSI002_col1"
+    nome_arquivo_entrada = "./input/" + nome_arquivo + ".csv" #endereço de busca
     
-    tecnica = int(input("Técnicas de teste:\n1: ISOMAP - (Isometric Mapping)\n2: LAMP\t - (Linear Aggregation of Multiple Projections)\n3: LSP\t - (Least Squares Projections)\n4: PLMP\t - (Projected Landmark Multi-Projection) - OBS.:Usa KMeans\n5: t-SNE - (t-distributed Stochastic Neighbor Embedding)\nDigite o número da tecnica: "))
+    tecnica = int(input("Técnicas de teste:\n1: ISOMAP - (Isometric Mapping)\n2: LSP\t - (Least Squares Projections)\n3: PLMP\t - (Part-Linear Multidimensional Projection)\n4: t-SNE - (t-distributed Stochastic Neighbor Embedding)\nDigite o número da tecnica: "))
 
     if tecnica == 1:
-        nome_arquivo_saida = "Saida_ISOMAP.csv"
+        nome_arquivo_saida = "Saida_ISOMAP_"+ nome_arquivo +".csv"
     elif tecnica == 2:
-        nome_arquivo_saida = "Saida_LAMP.csv"
+        nome_arquivo_saida = "Saida_LAMP_"+ nome_arquivo +".csv"
     elif tecnica == 3:
-        nome_arquivo_saida = "Saida_LSP.csv"
+        nome_arquivo_saida = "Saida_LSP_"+ nome_arquivo +".csv"
     elif tecnica == 4:
-        nome_arquivo_saida = "Saida_PLMP.csv"
+        nome_arquivo_saida = "Saida_PLMP_"+ nome_arquivo +".csv"
     elif tecnica == 5:
-        nome_arquivo_saida = "Saida_t-SNE.csv"
+        nome_arquivo_saida = "Saida_t-SNE_"+ nome_arquivo +".csv"
     else:
         print("ERRO: não foi selecionada uma técnica válida")
         exit(0)
@@ -176,6 +170,7 @@ def main():
     #print(dicio)
 
     # adiciona as chaves e matriz
+    print(type(chave_dos_dados),type(classes),type(matriz))
     for chave, classe, dado in zip(chave_dos_dados,classes,matriz):
             data_ = dado.tolist()
             data_.insert(0, classe)

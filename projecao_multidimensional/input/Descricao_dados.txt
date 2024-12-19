@@ -1,0 +1,16 @@
+Angélica me passou os dados para você utilizar nas projeções, para as disciplinas GSI001 até GSI020, que envio em anexo. O cabeçalho dos dados é o seguinte:
+
+IDT_MATRICULA: matrícula do aluno
+IDT_TURMA: turma na qual o aluno está matriculado (veja que ele pode aparecer mais de uma vez, caso tenha feito a disciplina e reprovado)
+COD_DISCIPLINA: código da disciplina, como aparece no site da FACOM
+VLR_MEDIA: média final do aluno
+DSC_SITUACAO_FINAL: situação final do aluno (Aprovado ou reprovado)
+LISTA DE TÓPICOS: lista com os ids dos tópicos ministrados na disciplina, de acordo com a ficha da mesma, e a situação do aluno naquele tópico 
+(0: faltou, 1: compareceu. 2: tópico não ministrado naquela turma)
+
+OBSERVAÇÕES
+- Cada disciplina tem um conjunto diferente de tópicos, então será uma projeção por disciplina, ok? Não faz sentido misturar as planilhas.
+- Alguns tópicos demandam mais de uma aula. Nesse caso, a presença do aluno no tópico é ditada pela presença na maioria das aulas (70%) referentes àquele tópico.
+
+Também estou enviando um arquivo que tem a descrição de cada tópico, de acordo com a ficha da disciplina. Esse arquivo servirá para você relacionar o código do tópico ministrado à sua descrição.
+O código a ser utilizado é o da coluna IDT_AULA.
