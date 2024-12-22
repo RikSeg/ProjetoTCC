@@ -54,14 +54,14 @@ def lsp(matriz,n_components=2,k=5):
     return projections
 
 
-def plmp(matriz, n_segmentos=3, n_componentes=2):
+def plmp(matriz, n_segmentos=3, n_components=2):
     """
     Implementação de PLMP (Part-Linear Multidimensional Projection).
     
     Parâmetros:
         matriz (numpy.ndarray): Dados de entrada (amostras x características).
         n_segmentos (int): Número de segmentos nos quais os dados serão divididos.
-        n_componentes (int): Número de componentes principais para a projeção linear (PCA).
+        n_components (int): Número de componentes principais para a projeção linear (PCA).
         
     Retorna:
         numpy.ndarray: Matriz de dados projetada no espaço de baixa dimensionalidade.
@@ -74,7 +74,7 @@ def plmp(matriz, n_segmentos=3, n_componentes=2):
     projecoes = []
     for segmento_id in range(n_segmentos):
         segmento = matriz[labels == segmento_id]
-        pca = PCA(n_components=n_componentes)
+        pca = PCA(n_components)
         projecao = pca.fit_transform(segmento)
         projecoes.append(projecao)
     
@@ -109,9 +109,10 @@ def funcao_aplicada(matriz,case):
     return matriz_saida
 
 def processar_arquivo_entrada(nome_arquivo_entrada):
+    print("NOME: "+nome_arquivo_entrada)
     dados_entrada = {}
 
-    if nome_arquivo_entrada == "iris_index.csv":
+    if nome_arquivo_entrada == "./input/iris_index.csv":
         with open(nome_arquivo_entrada, 'r', newline='') as arquivo_csv:
             leitor_csv = csv.reader(arquivo_csv)
             titulo = next(leitor_csv)
@@ -121,16 +122,17 @@ def processar_arquivo_entrada(nome_arquivo_entrada):
                 classes.append(linha[1])
                 valores = linha[2:]
                 dados_entrada[chave] = valores
-    # Lê o arquivo de entrada e organiza os dados
-    with open(nome_arquivo_entrada, 'r', newline='') as arquivo_csv:
-        leitor_csv = csv.reader(arquivo_csv)
-        titulo = next(leitor_csv)
-        classes = []
-        for linha in leitor_csv:
-            chave = linha[0]
-            classes.append(linha[4])
-            valores = linha[5:]
-            dados_entrada[chave] = valores
+    else:
+        # Lê o arquivo de entrada e organiza os dados
+        with open(nome_arquivo_entrada, 'r', newline='') as arquivo_csv:
+            leitor_csv = csv.reader(arquivo_csv)
+            titulo = next(leitor_csv)
+            classes = []
+            for linha in leitor_csv:
+                chave = linha[0]
+                classes.append(linha[4])
+                valores = linha[5:]
+                dados_entrada[chave] = valores
 
     return titulo,classes, dados_entrada
 
