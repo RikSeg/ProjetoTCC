@@ -3,9 +3,9 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
+
+
 st.set_page_config(layout="wide")
-
-
 
 # Define o número da disciplina para o arquivo que deseja ler
 numeros_disciplinas = ["02","05","06","07","11","15","16"]  

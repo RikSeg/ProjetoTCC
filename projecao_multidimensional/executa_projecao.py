@@ -7,8 +7,16 @@ from sklearn.cluster import KMeans
 from sklearn.metrics.pairwise import euclidean_distances
 from scipy.linalg import lstsq
 
+"""
+    Script desenvolvido para executar os modelos de projeção sobre as bases de dados das disciplinas
 
-#import umap.umap_ as umap
+    # É preciso adicionar o nome do arquivo para executar via código. 
+    # Caso queira mudar de diretório para buscar o arquivo de entrada,
+    #  altere o endereço (linhas 162 e 163 respectivamente)
+    
+    # Foi elaborado um tratamento para o uso da base de dados Iris
+
+"""
 
 epsilon = 1e-7
 
@@ -55,22 +63,12 @@ def lsp(matriz,n_components=2,k=5):
 
 
 def plmp(matriz, n_segmentos=3, n_components=2):
-    """
-    Implementação de PLMP (Part-Linear Multidimensional Projection).
-    
-    Parâmetros:
-        matriz (numpy.ndarray): Dados de entrada (amostras x características).
-        n_segmentos (int): Número de segmentos nos quais os dados serão divididos.
-        n_components (int): Número de componentes principais para a projeção linear (PCA).
-        
-    Retorna:
-        numpy.ndarray: Matriz de dados projetada no espaço de baixa dimensionalidade.
-    """
-    # Etapa 1: Definir os segmentos usando KMeans
+
+    # Definir os segmentos usando KMeans
     kmeans = KMeans(n_clusters=n_segmentos, random_state=42)
     labels = kmeans.fit_predict(matriz)
     
-    # Etapa 2: Aplicar PCA em cada segmento
+    # Aplicar PCA em cada segmento
     projecoes = []
     for segmento_id in range(n_segmentos):
         segmento = matriz[labels == segmento_id]
@@ -78,7 +76,7 @@ def plmp(matriz, n_segmentos=3, n_components=2):
         projecao = pca.fit_transform(segmento)
         projecoes.append(projecao)
     
-    # Etapa 3: Combinar as projeções em uma única matriz
+    # Combinar as projeções em uma única matriz
     projecao_final = np.vstack(projecoes)
     
     return projecao_final
@@ -93,7 +91,7 @@ def t_sne(matriz):
 
     return matriz_saida
 
-# Dicionário de casos
+# Dicionário de funções para o seletor
 switch = {
     1: isomap,
     2: lsp,
@@ -101,37 +99,37 @@ switch = {
     4: t_sne 
 }
 
-# Define a função que será aplicada aos valores associados a cada chave
+# Define a função que será aplicada aos valores associados a cada chave (case)
 def funcao_aplicada(matriz,case):
     
     matriz_saida = switch.get(case,default_case)(matriz)
     
     return matriz_saida
 
-def processar_arquivo_entrada(nome_arquivo_entrada):
-    print("NOME: "+nome_arquivo_entrada)
+def processar_arquivo_entrada(endereco_arquivo_entrada):
     dados_entrada = {}
 
-    if nome_arquivo_entrada == "./input/iris_index.csv":
-        with open(nome_arquivo_entrada, 'r', newline='') as arquivo_csv:
+    # Se o endereço do arquivo for a base iris, faz um tratamento diferente
+    if endereco_arquivo_entrada == "./input/iris_index.csv":
+        with open(endereco_arquivo_entrada, 'r', newline='') as arquivo_csv:
             leitor_csv = csv.reader(arquivo_csv)
             titulo = next(leitor_csv)
             classes = []
             for linha in leitor_csv:
                 chave = linha[0]
-                classes.append(linha[1])
-                valores = linha[2:]
+                classes.append(linha[1])    # captura a classe na posição 2
+                valores = linha[2:]         # as outras colunas após são valores para calcular as projeções
                 dados_entrada[chave] = valores
     else:
         # Lê o arquivo de entrada e organiza os dados
-        with open(nome_arquivo_entrada, 'r', newline='') as arquivo_csv:
+        with open(endereco_arquivo_entrada, 'r', newline='') as arquivo_csv:
             leitor_csv = csv.reader(arquivo_csv)
             titulo = next(leitor_csv)
             classes = []
             for linha in leitor_csv:
                 chave = linha[0]
-                classes.append(linha[4])
-                valores = linha[5:]
+                classes.append(linha[4])    # captura a classe na posição 5
+                valores = linha[5:]         # as outras colunas após são valores para calcular as projeções
                 dados_entrada[chave] = valores
 
     return titulo,classes, dados_entrada
