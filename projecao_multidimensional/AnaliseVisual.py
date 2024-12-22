@@ -13,7 +13,7 @@ numeros_disciplinas = ["02","05","06","07","11","15","16"]
 # Define os modelos que você quer buscar
 modelos = ["ISOMAP", "LSP", "PLMP", "t-SNE"]
 
-debug_mode = st.toggle("Teste Iris", value=False)
+debug_mode = st.toggle("Teste Iris", value=False, help="Ative para que seja mostrada a projeção apenas do dataset Iris. Todos os gráficos e filtros não relacionados à projeção serão desativados.")
 col_filtr1,col_filtr2 = st.columns(2)
 
 if not debug_mode:
@@ -34,10 +34,10 @@ if not debug_mode:
     arquivo_tsne = f"output/Saida_t-SNE_GSI0{selectdisciplina}.csv"
 else:
     arquivo_dados = "input/iris_index.csv"
-    arquivo_isomap = "output/Saida_ISOMAP.csv"
-    arquivo_lsp = "output/Saida_LSP.csv"
-    arquivo_plmp = "output/Saida_PLMP.csv"
-    arquivo_tsne = "output/Saida_t-SNE.csv"
+    arquivo_isomap = "output/Saida_ISOMAP_iris_index.csv"
+    arquivo_lsp = "output/Saida_LSP_iris_index.csv"
+    arquivo_plmp = "output/Saida_PLMP_iris_index.csv"
+    arquivo_tsne = "output/Saida_t-SNE_iris_index.csv"
 
 def scatterplot(df_modelo, modelo):
     color_map = {'Aprovado': 'blue', 'Reprovado': 'orange'}
@@ -65,27 +65,24 @@ def scatterplot(df_modelo, modelo):
     return event
 
 def barrasPresencas(df):
-    if df == {}:
-        return 0
-    else:
-        # Separando as colunas do eixo x (excluindo as 5 primeiras)
-        df_data = df.iloc[:, 5:]
-        # Contando a quantidade de cada categoria em cada coluna
-        counts = {value: (df_data == value).sum() for value in [0, 1, 2]}
+    # Separando as colunas do eixo x (excluindo as 5 primeiras)
+    df_data = df.iloc[:, 5:]
+    # Contando a quantidade de cada categoria em cada coluna
+    counts = {value: (df_data == value).sum() for value in [0, 1, 2]}
 
-        presenca_map = {0: 'Ausente', 1: 'Presente', 2: 'Não Ministrada'}
-        cores= {0:'red', 1:'green', 2:'blue'}
-        # Criando o gráfico de barras agrupadas
-        fig = go.Figure()
-        for value, count_series in counts.items():
-            fig.add_trace(
-                go.Bar(
-                    x=count_series.index, 
-                    y=count_series.values, 
-                    name=presenca_map[value],
-                    marker=dict(color=cores[value])
-                )
+    presenca_map = {0: 'Ausente', 1: 'Presente', 2: 'Não Ministrada'}
+    cores= {0:'red', 1:'green', 2:'blue'}
+    # Criando o gráfico de barras agrupadas
+    fig = go.Figure()
+    for value, count_series in counts.items():
+        fig.add_trace(
+            go.Bar(
+                x=count_series.index, 
+                y=count_series.values, 
+                name=presenca_map[value],
+                marker=dict(color=cores[value])
             )
+        )
 
     # Configurando o layout do gráfico
     fig.update_layout(
@@ -166,21 +163,20 @@ with col_graficos[1]:
     else:
         st.write("Os dados de seleção não foram capturados corretamente.")
 
-df_graf = df_saida
-# Adicionando o filtro por turma
-if debug_mode:
-    df_graf=[]
-try:
-    turmas = sorted(df_graf['IDT_TURMA'].unique())
-    turmas = ["Todas as Turmas"] + list(turmas)  # Adicionando a opção no início da lista
-    turma_selecionada = st.selectbox("Selecione a turma", options=turmas, index=0)
+    df_graf = df_saida
+    # Adicionando o filtro por turma
+    if not debug_mode:
+        turmas = sorted(df_graf['IDT_TURMA'].unique())
+        turmas = ["Todas as Turmas"] + list(turmas)  # Adicionando a opção no início da lista
+        turma_selecionada = st.selectbox("Selecione a turma", options=turmas, index=0)
 
-    # Filtrando o DataFrame apenas se uma turma específica for selecionada
-    if turma_selecionada != "Todas as Turmas":
-        df_graf = df_graf[df_graf['IDT_TURMA'] == turma_selecionada]
-    else:
-        df_graf = df_graf
-    barrasPresencas(df_graf)
+        # Filtrando o DataFrame apenas se uma turma específica for selecionada
+        if turma_selecionada != "Todas as Turmas":
+            df_graf = df_graf[df_graf['IDT_TURMA'] == turma_selecionada]
+        else:
+            df_graf = df_graf
+        barrasPresencas(df_graf)
+if not debug_mode:        
     col_metr = st.columns(5)
     with col_metr[0]:
         st.metric("Alunos:",len(df_graf))
@@ -193,8 +189,7 @@ try:
     with col_metr[4]:
         media = df_graf['VLR_MEDIA'].sum()/len(df_graf['IDT_MATRICULA'])
         st.metric("Média das Notas:",f"{media:.2f}")
-except KeyError:
-    print("Testes com Iris ativo. Outras visualizações estão indisponíveis")
+
 
 st.write("Base de dados completa:")
 st.dataframe(df_saida)
