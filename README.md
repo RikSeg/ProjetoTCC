@@ -12,7 +12,14 @@
 - Lista escrita no arquivo "requirements.txt"
 
 ### Execução
-- Crie um ambiente virtual utilizando o arquivo "requirements.txt"(garante o uso de todas as bibliotecas usadas no projeto e evita afetar o python instalado)
+Preparação do repositório local:
+- ``git clone <repo>`` (clona o repositório do github)
+- ``cd <repo>`` (acessa o repositório)
+- ``pip install virtualenv`` (Se já não tiver a biblioteca instalada)
+- ``virtualenv venv`` para criar um novo ambiente virtual (aqui chamado de 'venv')
+- ``source venv/bin/activate`` para entrar no ambiente virtual
+- ``pip install -r requirements.txt`` para instalar as bibliotecas dos requisitos
+
 - "cd projecão_multidimensional"
 - execute "streamlit run AnaliseVisual.py"
 - OBS.: O streamlit abrirá a aplicação no navegador
